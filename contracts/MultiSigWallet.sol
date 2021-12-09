@@ -71,44 +71,52 @@ contract MultiSigWallet
         DepositFunds(msg.sender, msg.value);
     }
 
-    function withdraw(uint amount)
+    function withdraw(uint _amount)
     public
     {
-        require(address(this).balance >= amount);
-        
-
+      require(address(this).balance >= _amount);
+      //YOUR CODE HERE
+      transferTo(msg.sender, _amount);
     }
 
     /// @dev Send ether to specific a transaction
-    /// @param destination Transaction target address.
-    /// @param value Transaction ether value.
+    /// @param _destination Transaction target address.
+    /// @param _value Transaction ether value.
     ///
     /// Start by creating your transaction. Since we defined it as a struct,
     /// we need to define it in a memory context. Update the member attributes.
     ///
     /// note, keep transactionID updated
-    function transferTo(address destination, uint value) validOwner public {
-      require(address(this).balance >= value);
+    function transferTo(address _destination, uint _value)
+    validOwner public
+    {
+      require(address(this).balance >= _value);
       //YOUR CODE HERE
-
+      Transaction memory t;
       //create the transaction
       //YOUR CODE HERE
-
-
-
-
-
+      t.source = msg.sender;
+      t.destination = _destination;
+      t.value = _value;
+      t.signatures[msg.sender] = 1;
+      t.signatureCount = 1;
+      
       //add transaction to the data structures
       //YOUR CODE HERE
-
-
+      _transactions[_transactionIndex] = t;
+      _pendingTransactions.push(_transactionIndex);
       //log that the transaction was created to a specific address
       //YOUR CODE HERE
+      emit TransactionCreated(msg.sender, _destination, _value, _transactionIndex);
+      _transactionIndex++;
     }
 
     //returns pending transcations
-    function getPendingTransactions() view validOwner public returns (uint[] memory) {
-      //YOUR CODE HERE
+    function getPendingTransactions()
+    view validOwner public
+    returns (uint[] memory)
+    {
+      return _pendingTransactions;
     }
 
     /// @dev Allows an owner to confirm a transaction.
@@ -144,7 +152,7 @@ contract MultiSigWallet
 
       //  check to see if transaction has enough signatures so that it can actually be completed
       // if true, make the transaction. Don't forget to log the transaction was completed.
-      if (_transactions.signatureCount >= MIN_SIGNATURES) {
+      if (transaction.signatureCount >= MIN_SIGNATURES) {
         require(address(this).balance >= _transactions.value); //validate transaction
         //YOUR CODE HERE
 
