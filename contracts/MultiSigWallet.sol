@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
-contract MultiSigWallet {
+contract MultiSigWallet
+{
     address private _owner;
     mapping(address => uint8) private _owners;
 
@@ -13,7 +14,8 @@ contract MultiSigWallet {
     // constant: we need x amount of signatures to sign Transaction
     uint constant MIN_SIGNATURES = 2;
 
-    struct Transaction {
+    struct Transaction
+    {
         address source;
         address destination;
         uint value;
@@ -23,12 +25,14 @@ contract MultiSigWallet {
         mapping (address => uint8) signatures;
     }
 
-    modifier isOwner() {
+    modifier isOwner()
+    {
         require(msg.sender == _owner);
         _;
     }
 
-    modifier validOwner() {
+    modifier validOwner()
+    {
         require(msg.sender == _owner || _owners[msg.sender] == 1);
         _;
     }
@@ -43,28 +47,35 @@ contract MultiSigWallet {
 
 
     /// @dev Contract constructor sets initial owners
-    constructor() {
+    constructor()
+    {
         _owner = msg.sender;
     }
 
     /// @dev add new owner to have access, enables the ability to create more than one owner to manage the wallet
-    function addOwner(address newOwner) isOwner public {
-      //YOUR CODE HERE
+    function addOwner(address newOwner)
+    isOwner public
+    {
+        _owners[newOwner] = 1;
     }
 
     /// @dev remove suspicious owners
-    function removeOwner(address existingOwner) isOwner public {
-      //YOUR CODE HERE
+    function removeOwner(address existingOwner)
+    isOwner public
+    {
+        _owners[existingOwner] = 0;
     }
 
     /// @dev Fallback function, which accepts ether when sent to contract
-    fallback() external payable {
+    receive() external payable {
         DepositFunds(msg.sender, msg.value);
     }
 
-    function withdraw(uint amount) public {
-      require(address(this).balance >= amount);
-      //YOUR CODE HERE
+    function withdraw(uint amount)
+    public
+    {
+        require(address(this).balance >= amount);
+        
 
     }
 
