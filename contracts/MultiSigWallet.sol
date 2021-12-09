@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
 contract MultiSigWallet {
@@ -62,7 +63,7 @@ contract MultiSigWallet {
     }
 
     function withdraw(uint amount) public {
-      require(address(this).balance >= value);
+      require(address(this).balance >= amount);
       //YOUR CODE HERE
 
     }
@@ -132,15 +133,15 @@ contract MultiSigWallet {
 
       //  check to see if transaction has enough signatures so that it can actually be completed
       // if true, make the transaction. Don't forget to log the transaction was completed.
-      if (transaction.signatureCount >= MIN_SIGNATURES) {
-        require(address(this).balance >= transaction.value); //validate transaction
+      if (_transactions.signatureCount >= MIN_SIGNATURES) {
+        require(address(this).balance >= _transactions.value); //validate transaction
         //YOUR CODE HERE
 
         //log that the transaction was complete
         //YOUR CODE HERE
 
         //end with a call to deleteTransaction
-        deleteTransaction(transactionId);
+        deleteTransaction(transactionID);
       }
     }
 
