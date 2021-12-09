@@ -95,12 +95,12 @@ contract MultiSigWallet {
     }
 
     //returns pending transcations
-    function getPendingTransactions() constant validOwner public returns (uint[]) {
+    function getPendingTransactions() view validOwner public returns (uint[]) {
       //YOUR CODE HERE
     }
 
     /// @dev Allows an owner to confirm a transaction.
-    /// @param transactionId Transaction ID.
+    /// @param transactionID Transaction ID.
     /// Sign and Execute transaction.
     function signTransaction(uint transactionID) validOwner public {
       //Use Transaction Structure. Above in TransferTo function, because
@@ -160,7 +160,7 @@ contract MultiSigWallet {
     }
 
     /// @return Returns balance
-    function walletBalance() constant public returns (uint) {
+    function walletBalance() view public returns (uint) {
       //YOUR CODE HERE
     }
 
