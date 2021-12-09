@@ -77,6 +77,7 @@ class App extends Component {
         /// list of events we are tracking in the state object. REMEMBER TO USE 'that'
         /// instead of 'this'. You can use 'that.state.item' to access 'item' from the state
         /// and 'that.setState({item: value})' to reset the value of 'item' to 'value'
+        console.log(that.state.multiSigContract({depositFundsEvent: result}));
       }
     })
 
@@ -85,6 +86,7 @@ class App extends Component {
         console.log(error);
       } else {
         /// YOUR CODE HERE -- same instructions as above
+        console.log(that.state.multiSigContract({transactionCreatedEvent: result}));
       }
     })
 
@@ -93,6 +95,7 @@ class App extends Component {
         console.log(error);
       } else {
         /// YOUR CODE HERE -- same instructions as above
+        console.log(that.state.multiSigContract({transactionCompletedEvent: result}));
       }
     })
 
@@ -101,6 +104,7 @@ class App extends Component {
         console.log(error);
       } else {
         /// YOUR CODE HERE -- same instructions as above
+        console.log(that.state.multiSigContract({transactionSignedEvent: result}));
       }
     })
   }
