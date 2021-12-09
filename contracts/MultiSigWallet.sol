@@ -57,7 +57,7 @@ contract MultiSigWallet {
     }
 
     /// @dev Fallback function, which accepts ether when sent to contract
-    function () public payable {
+    fallback() external payable {
         DepositFunds(msg.sender, msg.value);
     }
 
