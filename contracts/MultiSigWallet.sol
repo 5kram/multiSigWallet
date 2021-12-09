@@ -1,4 +1,4 @@
-pragma solidity ^0.4.15;
+pragma solidity ^0.8.10;
 
 contract MultiSigWallet {
     address private _owner;
@@ -42,7 +42,7 @@ contract MultiSigWallet {
 
 
     /// @dev Contract constructor sets initial owners
-    function MultiSigWallet() public {
+    constructor() {
         _owner = msg.sender;
     }
 
