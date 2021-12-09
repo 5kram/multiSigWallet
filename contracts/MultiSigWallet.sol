@@ -96,7 +96,7 @@ contract MultiSigWallet {
     }
 
     //returns pending transcations
-    function getPendingTransactions() view validOwner public returns (uint[]) {
+    function getPendingTransactions() view validOwner public returns (uint[] memory) {
       //YOUR CODE HERE
     }
 
