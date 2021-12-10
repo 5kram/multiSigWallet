@@ -68,7 +68,7 @@ contract MultiSigWallet
 
     /// @dev Fallback function, which accepts ether when sent to contract
     receive() external payable {
-        DepositFunds(msg.sender, msg.value);
+        emit DepositFunds(msg.sender, msg.value);
     }
 
     function withdraw(uint _amount)
@@ -92,18 +92,17 @@ contract MultiSigWallet
     {
       require(address(this).balance >= _value);
       //YOUR CODE HERE
-      Transaction memory t;
+      Transaction storage transaction = _transactions[_transactionIndex];
       //create the transaction
       //YOUR CODE HERE
-      t.source = msg.sender;
-      t.destination = _destination;
-      t.value = _value;
-      t.signatures[msg.sender] = 1;
-      t.signatureCount = 1;
-      
+      transaction.source = msg.sender;
+      transaction.destination = _destination;
+      transaction.value = _value;
+      transaction.signatureCount = 0;
+      transaction.signatures[msg.sender] = 0;
       //add transaction to the data structures
       //YOUR CODE HERE
-      _transactions[_transactionIndex] = t;
+//      _transactions[_transactionIndex] = transaction;
       _pendingTransactions.push(_transactionIndex);
       //log that the transaction was created to a specific address
       //YOUR CODE HERE
@@ -120,9 +119,9 @@ contract MultiSigWallet
     }
 
     /// @dev Allows an owner to confirm a transaction.
-    /// @param transactionID Transaction ID.
+    /// @param _transactionID Transaction ID.
     /// Sign and Execute transaction.
-    function signTransaction(uint transactionID) validOwner public {
+    function signTransaction(uint _transactionID) validOwner public {
       //Use Transaction Structure. Above in TransferTo function, because
       //we created the structure, we had to specify the keyword memory.
       //Now, we are pulling in the structure from a storage mechanism
@@ -131,36 +130,45 @@ contract MultiSigWallet
 
       //Create variable transaction using storage (which creates a reference point)
       //YOUR CODE HERE
-
+      Transaction storage transaction = _transactions[_transactionID];
+      
       // Transaction must exist, note: use require(), but can't do require(transaction), .
       //YOUR CODE HERE
-
+      require(transaction.source != address(0x0));
+      
       // Creator cannot sign the transaction, use require()
       //YOUR CODE HERE
-
+      require(transaction.source != msg.sender);
+      
       // Cannot sign a transaction more than once, use require()
       //YOUR CODE HERE
-
+      require(transaction.signatures[msg.sender] != 1);
+      
       // assign the transaction = 1, so that when the function is called again it will fail
       //YOUR CODE HERE
-
+      transaction.signatures[msg.sender] = 1;
+      
       // increment signatureCount
       //YOUR CODE HERE
-
+      transaction.signatureCount++;
+      
       // log transaction
       //YOUR CODE HERE
-
+      emit TransactionSigned(msg.sender, _transactionID);
+      
       //  check to see if transaction has enough signatures so that it can actually be completed
       // if true, make the transaction. Don't forget to log the transaction was completed.
-      if (transaction.signatureCount >= MIN_SIGNATURES) {
-        require(address(this).balance >= _transactions.value); //validate transaction
+      if (transaction.signatureCount >= MIN_SIGNATURES)
+      {
+        require(address(this).balance >= transaction.value); //validate transaction
         //YOUR CODE HERE
-
+        payable(transaction.source).transfer(transaction.value);
         //log that the transaction was complete
         //YOUR CODE HERE
-
+        emit TransactionCompleted(transaction.source, transaction.destination,
+         transaction.value, _transactionID);
         //end with a call to deleteTransaction
-        deleteTransaction(transactionID);
+        deleteTransaction(_transactionID);
       }
     }
 
@@ -175,13 +183,14 @@ contract MultiSigWallet
         }
       }
       delete _pendingTransactions[_pendingTransactions.length - 1];
-      _pendingTransactions.length--;
+//      _pendingTransactions.length--;
       delete _transactions[transactionId];
     }
 
     /// @return Returns balance
     function walletBalance() view public returns (uint) {
       //YOUR CODE HERE
+      return address(this).balance;
     }
 
  }

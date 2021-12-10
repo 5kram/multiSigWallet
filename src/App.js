@@ -31,9 +31,11 @@ class App extends Component {
     // See utils/getWeb3 for more info.
     getWeb3
     .then(results => {
+      let web3 = results.web3
       this.setState({
         web3: results.web3
       })
+      web3.eth.defaultAccount = web3.eth.accounts[0]
     // Instantiate contract once web3 provided.
       this.instantiateContract()
     })
@@ -77,8 +79,13 @@ class App extends Component {
         /// list of events we are tracking in the state object. REMEMBER TO USE 'that'
         /// instead of 'this'. You can use 'that.state.item' to access 'item' from the state
         /// and 'that.setState({item: value})' to reset the value of 'item' to 'value'
-        console.log(that.state.multiSigContract({depositFundsEvent: result}));
-      }
+        console.log(that.state.depositFundsEvent)
+//      that.setState({ events: [that.state.events + result.event], numEvents: that.state.events + 1 });
+        that.state.events.push(result.event);
+        that.setState({events: [result.event]});
+        that.state.numEvents += 1;
+        console.log(that.state.events);      
+}
     })
 
     transactionCreatedEvent.watch(function(error, result) {
@@ -86,8 +93,13 @@ class App extends Component {
         console.log(error);
       } else {
         /// YOUR CODE HERE -- same instructions as above
-        console.log(that.state.multiSigContract({transactionCreatedEvent: result}));
-      }
+        console.log(result);
+        // that.setState({ events: [that.state.events + result.event], numEvents: that.state.events + 1 });
+       that.state.events.push(result.event);
+       that.setState({events: [result.event]});
+       that.state.numEvents += 1;
+       console.log(that.state.events);
+                  }
     })
 
     transactionCompletedEvent.watch(function(error, result) {
@@ -95,8 +107,12 @@ class App extends Component {
         console.log(error);
       } else {
         /// YOUR CODE HERE -- same instructions as above
-        console.log(that.state.multiSigContract({transactionCompletedEvent: result}));
-      }
+       // that.setState({ events: [that.state.events + result.event], numEvents: that.state.events + 1 });
+       that.state.events.push(result.event);
+       that.setState({events: [result.event]});
+       that.state.numEvents += 1;
+       console.log(that.state.events);
+                   }
     })
 
     transactionSignedEvent.watch(function(error, result) {
@@ -104,8 +120,12 @@ class App extends Component {
         console.log(error);
       } else {
         /// YOUR CODE HERE -- same instructions as above
-        console.log(that.state.multiSigContract({transactionSignedEvent: result}));
-      }
+        //that.setState({ events: [that.state.events + result.event], numEvents: that.state.events + 1 });
+        that.state.events.push(result.event);
+        that.setState({events: [result.event]});
+        that.state.numEvents += 1;
+        console.log(that.state.events);
+                  }
     })
   }
 
@@ -115,6 +135,14 @@ class App extends Component {
   /// function, which is documented here -- https://github.com/ethereum/wiki/wiki/JavaScript-API#web3ethsendtransaction
   sendEther() {
     /// YOUR CODE HERE. This should only be 1 line.
+    this.state.web3.eth.sendTransaction({
+      to: this.state.multiSigContract.address,
+       value: 200000000000000000
+      }, function(err, transactionHash) {
+        if(!err)
+          console.log(transactionHash);
+      }
+    );
   }
 
   render() {
