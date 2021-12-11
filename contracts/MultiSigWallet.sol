@@ -142,7 +142,7 @@ contract MultiSigWallet
       
       // Cannot sign a transaction more than once, use require()
       //YOUR CODE HERE
-      require(transaction.signatures[msg.sender] != 1);
+      require(transaction.signatures[msg.sender] == 0);
       
       // assign the transaction = 1, so that when the function is called again it will fail
       //YOUR CODE HERE

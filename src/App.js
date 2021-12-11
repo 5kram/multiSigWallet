@@ -62,14 +62,20 @@ class App extends Component {
     var transactionSignedEvent = this.state.multiSigContract.TransactionSigned();
 
     // /// save reference to global component obj for later user
-    // var that = this;
+     var that = this;
 
     depositFundsEvent.watch((error, result) => {
       if (error) {
         console.log(error);
       } else {
+        /// YOUR CODE HERE -- what do we need to do if we want to log a component?
+        /// 'result.event' will give you the event itself, so try adding that to the 
+        /// list of events we are tracking in the state object. REMEMBER TO USE 'that'
+        /// instead of 'this'. You can use 'that.state.item' to access 'item' from the state
+        /// and 'that.setState({item: value})' to reset the value of 'item' to 'value'
+        that.setState({ events: [...that.state.events, result.event]});
+        that.setState({numEvents: [...that.state.numEvents + 1]});
         console.log(result)
-        this.setState({ events: [...this.state.events, result.event]});
       }
     })
 
@@ -77,8 +83,8 @@ class App extends Component {
       if (error) {
         console.log(error);
       } else {
-        console.log(result)
-        this.setState({ events: [...this.state.events, result.event]});
+        that.setState({ events: [...that.state.events, result.event]});
+        that.setState({numEvents: [...that.state.numEvents + 1]});
       }
     })
 
@@ -86,8 +92,8 @@ class App extends Component {
       if (error) {
         console.log(error);
       } else {
-        console.log(result)
-        this.setState({ events: [...this.state.events, result.event]});
+        that.setState({ events: [...that.state.events, result.event]});
+        that.setState({numEvents: [...that.state.numEvents + 1]});
       }
     })
 
@@ -95,8 +101,8 @@ class App extends Component {
       if (error) {
         console.log(error);
       } else {
-        console.log(result)
-        this.setState({ events: [...this.state.events, result.event]});
+        that.setState({ events: [...that.state.events, result.event]});
+        that.setState({numEvents: [...that.state.numEvents + 1]});
       }
     })
   }
